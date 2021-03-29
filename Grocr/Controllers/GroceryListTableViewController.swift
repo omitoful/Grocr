@@ -62,8 +62,25 @@ class GroceryListTableViewController: UITableViewController {
     
     user = User(uid: "FakeId", email: "hungry@person.food")
     
+    
+    
+    // Attach a listener to receive updates whenever the grocery-items endpoint is modified.
     ref.observe(.value, with: { snapshot in
-      print(snapshot.value as Any)
+        // Store the latest version of the data in a local variable inside the listener’s closure.
+        var newItems: [GroceryItem] = []
+        
+        // The listener’s closure returns a snapshot of the latest set of data. The snapshot contains the entire list of grocery items, not just the updates.
+        for child in snapshot.children {
+            if let snapshot = child as? DataSnapshot,
+               let groceryItem = GroceryItem(snapshot: snapshot) {
+                newItems.append(groceryItem)
+                
+                // The GroceryItem struct has an initializer that populates its properties using a DataSnapshot. A snapshot’s value is of type AnyObject, and can be a dictionary, array, number, or string. After creating an instance of GroceryItem, it’s added it to the array that contains the latest version of the data.
+            }
+        }
+        
+        self.items = newItems
+        self.tableView.reloadData()
     })
   }
   
@@ -90,10 +107,17 @@ class GroceryListTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    
+    
     if editingStyle == .delete {
-      items.remove(at: indexPath.row)
-      tableView.reloadData()
+      let groceryItem = items[indexPath.row]
+      groceryItem.ref?.removeValue()
     }
+    // origin
+//    if editingStyle == .delete {
+//      items.remove(at: indexPath.row)
+//      tableView.reloadData()
+//    }
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
