@@ -108,7 +108,6 @@ class GroceryListTableViewController: UITableViewController {
   
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     
-    
     if editingStyle == .delete {
       let groceryItem = items[indexPath.row]
       groceryItem.ref?.removeValue()
@@ -121,13 +120,20 @@ class GroceryListTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
     guard let cell = tableView.cellForRow(at: indexPath) else { return }
     var groceryItem = items[indexPath.row]
     let toggledCompletion = !groceryItem.completed
     
     toggleCellCheckbox(cell, isCompleted: toggledCompletion)
-    groceryItem.completed = toggledCompletion
-    tableView.reloadData()
+//    groceryItem.completed = toggledCompletion
+//    tableView.reloadData()
+    // replace :
+    groceryItem.ref?.updateChildValues([
+        "completed": toggledCompletion
+    ])
+    // Use updateChildValues(_:), passing a dictionary, to update Firebase. This method is different than setValue(_:) because it only applies updates, whereas setValue(_:) is destructive and replaces the entire value at that reference.
+    
   }
   
   func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
