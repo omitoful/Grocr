@@ -61,27 +61,41 @@ class GroceryListTableViewController: UITableViewController {
     navigationItem.leftBarButtonItem = userCountBarButtonItem
     
     user = User(uid: "FakeId", email: "hungry@person.food")
+
+   // using : queryOrdered to impletement code
     
-    
-    
-    // Attach a listener to receive updates whenever the grocery-items endpoint is modified.
-    ref.observe(.value, with: { snapshot in
-        // Store the latest version of the data in a local variable inside the listener’s closure.
-        var newItems: [GroceryItem] = []
-        
-        // The listener’s closure returns a snapshot of the latest set of data. The snapshot contains the entire list of grocery items, not just the updates.
-        for child in snapshot.children {
-            if let snapshot = child as? DataSnapshot,
-               let groceryItem = GroceryItem(snapshot: snapshot) {
-                newItems.append(groceryItem)
-                
-                // The GroceryItem struct has an initializer that populates its properties using a DataSnapshot. A snapshot’s value is of type AnyObject, and can be a dictionary, array, number, or string. After creating an instance of GroceryItem, it’s added it to the array that contains the latest version of the data.
-            }
+    ref.queryOrdered(byChild: "completed").observe(.value, with: { snapshot in
+      var newItems: [GroceryItem] = []
+      for child in snapshot.children {
+        if let snapshot = child as? DataSnapshot,
+           let groceryItem = GroceryItem(snapshot: snapshot) {
+          newItems.append(groceryItem)
         }
-        
-        self.items = newItems
-        self.tableView.reloadData()
+      }
+      
+      self.items = newItems
+      self.tableView.reloadData()
     })
+    
+//    // Attach a listener to receive updates whenever the grocery-items endpoint is modified.
+//    ref.observe(.value, with: { snapshot in
+//        // Store the latest version of the data in a local variable inside the listener’s closure.
+//        var newItems: [GroceryItem] = []
+//
+//        // The listener’s closure returns a snapshot of the latest set of data. The snapshot contains the entire list of grocery items, not just the updates.
+//        for child in snapshot.children {
+//            if let snapshot = child as? DataSnapshot,
+//               let groceryItem = GroceryItem(snapshot: snapshot) {
+//                newItems.append(groceryItem)
+//
+//                // The GroceryItem struct has an initializer that populates its properties using a DataSnapshot. A snapshot’s value is of type AnyObject, and can be a dictionary, array, number, or string. After creating an instance of GroceryItem, it’s added it to the array that contains the latest version of the data.
+//            }
+//        }
+//
+//        self.items = newItems
+//        self.tableView.reloadData()
+//    })
+    
   }
   
   // MARK: UITableView Delegate methods
@@ -133,7 +147,6 @@ class GroceryListTableViewController: UITableViewController {
         "completed": toggledCompletion
     ])
     // Use updateChildValues(_:), passing a dictionary, to update Firebase. This method is different than setValue(_:) because it only applies updates, whereas setValue(_:) is destructive and replaces the entire value at that reference.
-    
   }
   
   func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
