@@ -41,10 +41,45 @@ class LoginViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
   }
+    
+    override func viewDidLoad() {
+      super.viewDidLoad()
+      
+      // add performSegue here
+      Auth.auth().addStateDidChangeListener() { auth, user in
+        // Test the value of user. Upon successful user authentication, user is populated with the user’s information. If authentication fails, the variable is nil.
+        if user != nil {
+          //  It may seem strange that you don’t pass the user to the next controller, but you’ll see how to get this within GroceryListTableViewController.swift.
+          self.performSegue(withIdentifier: self.loginToList, sender: nil)
+          self.textFieldLoginEmail.text = nil
+          self.textFieldLoginPassword.text = nil
+        }
+      }
+    }
   
   // MARK: Actions
   @IBAction func loginDidTouch(_ sender: AnyObject) {
-    performSegue(withIdentifier: loginToList, sender: nil)
+    
+    // add action: need to login then perfomSegue
+    guard let email = textFieldLoginEmail.text,
+          let password = textFieldLoginPassword.text,
+          email.count > 0,
+          password.count > 0
+    else {
+        return ()
+    }
+    
+    Auth.auth().signIn(withEmail: email, password: password) { user, error in
+        if let error = error, user == nil {
+            let alert = UIAlertController(title: "Sign In Failed",
+                                          message: error.localizedDescription,
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+//    performSegue(withIdentifier: loginToList, sender: nil)
   }
   
   @IBAction func signUpDidTouch(_ sender: AnyObject) {
@@ -53,6 +88,15 @@ class LoginViewController: UIViewController {
                                   preferredStyle: .alert)
     
     let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
+        // add alertField.
+        let emailField = alert.textFields![0]
+        let passwordField = alert.textFields![1]
+        
+        Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { user, error in
+            if error == nil {
+                Auth.auth().signIn(withEmail: self.textFieldLoginEmail.text!, password: self.textFieldLoginPassword.text!)
+            }
+        }
     }
     
     let cancelAction = UIAlertAction(title: "Cancel",

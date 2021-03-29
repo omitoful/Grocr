@@ -40,7 +40,8 @@ class GroceryListTableViewController: UITableViewController {
   var items: [GroceryItem] = []
   var user: User!
   var userCountBarButtonItem: UIBarButtonItem!
-  
+    // add
+    let usersRef = Database.database().reference(withPath: "online")
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
@@ -95,6 +96,13 @@ class GroceryListTableViewController: UITableViewController {
 //        self.items = newItems
 //        self.tableView.reloadData()
 //    })
+    
+    // Setting the User in the Grocery List:
+    Auth.auth().addStateDidChangeListener { auth, user in
+      guard let user = user else { return }
+      self.user = User(authData: user)
+    }
+
     
   }
   
