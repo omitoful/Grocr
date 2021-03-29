@@ -36,6 +36,7 @@ class OnlineUsersTableViewController: UITableViewController {
   
   // MARK: Properties
   var currentUsers: [String] = []
+    let usersRef = Database.database().reference(withPath: "online")
   
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
@@ -44,7 +45,29 @@ class OnlineUsersTableViewController: UITableViewController {
   // MARK: UIViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    currentUsers.append("hungry@person.food")
+    // currentUsers.append("hungry@person.food")
+    // replace the code above
+    
+    usersRef.observe(.childAdded, with: { snap in
+        guard let email = snap.value as? String else { return }
+        self.currentUsers.append(email)
+        
+        let row = self.currentUsers.count - 1
+        let indexPath = IndexPath(row: row, section: 0)
+        self.tableView.insertRows(at: [indexPath], with: .top)
+    })
+    
+    usersRef.observe(.childRemoved, with: { snap in
+        guard let emailTofind = snap.value as? String else { return }
+        for (index, email) in self.currentUsers.enumerated() {
+            if email == emailTofind {
+                let indexPath = IndexPath(row: index, section: 0)
+                self.currentUsers.remove(at: index)
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        }
+    })
+    
   }
   
   // MARK: UITableView Delegate methods
