@@ -101,9 +101,14 @@ class GroceryListTableViewController: UITableViewController {
     Auth.auth().addStateDidChangeListener { auth, user in
       guard let user = user else { return }
       self.user = User(authData: user)
+        
+        // Create a child reference using a user’s uid, which is generated when Firebase creates an account.
+        let currentUserRef = self.usersRef.child(self.user.uid)
+        // save the current user’s email
+        currentUserRef.setValue(self.user.email)
+        // This removes the value at the reference’s location after the connection to Firebase closes, for instance when a user quits your app. This is perfect for monitoring users who have gone offline.
+        currentUserRef.onDisconnectRemoveValue()
     }
-
-    
   }
   
   // MARK: UITableView Delegate methods
