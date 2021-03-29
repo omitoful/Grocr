@@ -16,6 +16,7 @@
 		649F422520438D2E00B21997 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649F422320438D2E00B21997 /* User.swift */; };
 		649F422620438D2E00B21997 /* GroceryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649F422420438D2E00B21997 /* GroceryItem.swift */; };
 		649F422820438D5400B21997 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 649F422720438D5400B21997 /* Main.storyboard */; };
+		914AC2F8261190F700813D83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 914AC2F7261190F700813D83 /* GoogleService-Info.plist */; };
 		95F65799424252A5A9C5A1C7 /* libPods-Grocr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9329CDD67FBDDC24EC3B34C8 /* libPods-Grocr.a */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		649F422720438D5400B21997 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		7E91D6516268E18FC88947A4 /* Pods-Grocr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Grocr.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Grocr/Pods-Grocr.debug.xcconfig"; sourceTree = "<group>"; };
 		90E01CD9D5C237C44E4FC22B /* Pods-Grocr.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Grocr.release.xcconfig"; path = "Pods/Target Support Files/Pods-Grocr/Pods-Grocr.release.xcconfig"; sourceTree = "<group>"; };
+		914AC2F7261190F700813D83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9329CDD67FBDDC24EC3B34C8 /* libPods-Grocr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Grocr.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -92,6 +94,7 @@
 				649F422720438D5400B21997 /* Main.storyboard */,
 				645D789E204344160093B00C /* Assets.xcassets */,
 				645D78A0204344160093B00C /* LaunchScreen.storyboard */,
+				914AC2F7261190F700813D83 /* GoogleService-Info.plist */,
 				645D78A3204344160093B00C /* Info.plist */,
 			);
 			path = Grocr;
@@ -184,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				649F422820438D5400B21997 /* Main.storyboard in Resources */,
+				914AC2F8261190F700813D83 /* GoogleService-Info.plist in Resources */,
 				645D78A2204344160093B00C /* LaunchScreen.storyboard in Resources */,
 				645D789F204344160093B00C /* Assets.xcassets in Resources */,
 			);

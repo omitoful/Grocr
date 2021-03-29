@@ -30,6 +30,8 @@ import UIKit
 import Firebase
 
 class GroceryListTableViewController: UITableViewController {
+    
+    let ref = Database.database().reference(withPath: "grocery-items")
 
   // MARK: Constants
   let listToUsers = "ListToUsers"
@@ -59,6 +61,10 @@ class GroceryListTableViewController: UITableViewController {
     navigationItem.leftBarButtonItem = userCountBarButtonItem
     
     user = User(uid: "FakeId", email: "hungry@person.food")
+    
+    ref.observe(.value, with: { snapshot in
+      print(snapshot.value as Any)
+    })
   }
   
   // MARK: UITableView Delegate methods
@@ -120,14 +126,20 @@ class GroceryListTableViewController: UITableViewController {
                                   preferredStyle: .alert)
     
     let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
-      let textField = alert.textFields![0]
+        
+        guard let textField = alert.textFields?.first,
+              let text = textField.text else { return }
       
       let groceryItem = GroceryItem(name: textField.text!,
                                     addedByUser: self.user.email,
                                     completed: false)
-      
-      self.items.append(groceryItem)
-      self.tableView.reloadData()
+        let groceryItemRef = self.ref.child(text.lowercased())
+        groceryItemRef.setValue(groceryItem.toAnyObject())
+        
+        //1. Get the text field, and its text, from the alert controller.
+        //2. Using the current user’s data, create a new, uuncompleted GroceryItem.
+        //3. Create a child reference using child(_:). The key value of this reference is the item’s name in lowercase, so when users add duplicate items (even if they capitalize it, or use mixed case) the database saves only the latest entry.
+        //4. Use setValue(_:) to save data to the database. This method expects a Dictionary. GroceryItem has a helper function called toAnyObject() to turn it into a Dictionary.
     }
     
     let cancelAction = UIAlertAction(title: "Cancel",
